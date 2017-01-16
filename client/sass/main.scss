@@ -1,0 +1,170 @@
+@import 'mixins';
+@include font-face(RobotoRegular);
+@include font-face(RobotoBold);
+@include font-face(RobotoMedium);
+@include font-face(RobotoLight);
+
+
+body {
+	margin: 0;
+	padding: 0;
+	//background: url("https://subtlepatterns.com/patterns/confectionary.png");
+	background-color: #EAEAEA;
+}
+
+.app-name {
+	text-align: center;
+	margin: 20px auto 10px;
+	color: #9C9997;
+	font-family: RobotoRegular, serif;
+}
+
+#clearDB {
+	display: block;
+	width: 175px;
+	height: 40px;
+	border-radius: 20px;
+	background-color: #F98C80;
+	color: #fff;
+	text-transform: uppercase;
+	text-align: center;
+	font: 15px/1em RobotoMedium;
+	box-shadow: none;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+	position: absolute;
+	right: 50px;
+	top: 50px;
+}
+
+.new-card {
+	display: block;
+	width: 400px;
+	background-color: #fff;
+	padding: 30px 50px;
+	margin: 0 auto 80px;
+	box-shadow: 2px 2px 3px 3px #ccc;
+	&__title, &__text {
+		box-sizing: border-box;
+		width: 100%;
+		display: block;
+		margin-bottom: 30px;
+		font: 16px/1.618em RobotoLight;
+		color: #111;
+		padding: 0 10px;
+	}
+	&__text {
+		min-height: 100px;
+		resize: none;
+	}
+	button#post-card {
+		display: block;
+		margin: 30px auto 0;
+		width: 175px;
+		height: 40px;
+		border-radius: 20px;
+		background-color: #39C568;
+		color: #fff;
+		text-transform: uppercase;
+		text-align: center;
+		font: 15px/1em RobotoMedium;
+		box-shadow: none;
+		border: 0;
+		outline: none;
+		cursor: pointer;
+	}
+}
+
+.colors-input {
+	display: flex;
+	margin: 10px auto;
+	justify-content: center;
+	button {
+		display: block;
+		width: 20px;
+		height: 20px;
+		background-color: red;
+		border-radius: 50%;
+		box-sizing: border-box;
+		border: 1px solid #999;
+		cursor: pointer;
+		outline: none;
+		transform: translateY(0px);
+		&:active {
+			transform: translateY(2px);
+		}
+	}
+	button:not(:last-of-type) {
+		margin-right: 10px;
+	}
+	.colors-input__white {
+		background-color: #fff;
+	}
+	.colors-input__blue {
+		background-color: #80D7FD;
+	}
+	.colors-input__yellow {
+		background-color: #FCFF8C;
+	}
+	.colors-input__red {
+		background-color: #F98C80;
+	}
+	.colors-input__green {
+		background-color: #CBFF92;
+	}
+	.colors-input__grey {
+		background-color: #D3DADD;
+	}
+	.colors-input__orange {
+		background-color: #FFD081;
+	}
+	input {
+		width: 0;
+		height: 0;
+	}
+}
+
+#view {
+	display: flex;
+	flex-flow: wrap row;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 1200px;
+	box-sizing: border-box;
+	margin: 0 auto 80px;
+	background-color: #fff;
+	padding: 30px 60px;
+	.card {
+		width: 280px;
+		padding: 10px 15px;
+		border-radius: 10px;
+		position: relative;
+		text-align: justify;
+		&__clear {
+			position: absolute;
+			display: block;
+			width: 30px;
+			height: 30px;
+			background: url('./images/deleteOne.png');
+			background-size: cover;
+			border: 0;
+			outline: none;
+			cursor: pointer;
+			top: -15px;
+			right: -15px;
+		}
+		&__title {
+			font: 18px/1em RobotoBold, serif;
+			//text-align: center;
+		}
+		&__text {
+			font: 16px/1.618em RobotoRegular, serif;
+			text-indent: 40px;
+		}
+		&__date {
+			display: block;
+			text-align: right;
+		}
+	}
+}
