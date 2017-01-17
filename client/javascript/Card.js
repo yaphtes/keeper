@@ -9,6 +9,7 @@ class Card {
 		this.dom;
 	}
 
+
 	render() {
 		let container = document.createElement('div');
 		container.dataset.id = this.dataId;
@@ -35,6 +36,7 @@ class Card {
 
 		return this.dom;
 	}
+
 
 	destroy() {
 		let dataId = this.dataId;

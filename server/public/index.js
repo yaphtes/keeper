@@ -49,6 +49,7 @@ class Ajax {
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
+
 		http.onload = function() {
 			let dataId = JSON.parse(http.responseText);
 			return cb(null, dataId);
@@ -66,6 +67,7 @@ class Ajax {
 		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send();
+
 
 		http.onload = function() {
 			let response = http.responseText;
@@ -142,6 +144,7 @@ class Card {
 		this.dom;
 	}
 
+
 	render() {
 		let container = document.createElement('div');
 		container.dataset.id = this.dataId;
@@ -168,6 +171,7 @@ class Card {
 
 		return this.dom;
 	}
+
 
 	destroy() {
 		let dataId = this.dataId;
@@ -198,36 +202,31 @@ class EventListener {
 	}
 
 	listenView() {
-		let self = this;
-		document.onclick = function(event) {
+		document.onclick = event => {
 			let target = event.target;
 
 			if (target.classList.contains('card__clear')) {
 				let dataId = target.closest('.card').dataset.id;
-				let component = self.getComponent(dataId);
+				let component = this.getComponent(dataId);
 				component.destroy();
 			}
-		}
+		};
 	}
 
 	listenCardMaker() {
-		let self = this;
-		document.querySelector('.new-card').onclick = function(event) {
+		document.querySelector('.new-card').onclick = event => {
 			let target = event.target;
 
 			if (target.getAttribute('id') == 'post-card') {
-				self.postCard();
+				this.postCard();
 			} else if (target.className.includes('colors-input')) {
-				let bgcolor = getComputedStyle(target).backgroundColor;
-				document.querySelector('.new-card').style.backgroundColor = bgColor;
+				document.querySelector('.new-card').style.backgroundColor = getComputedStyle(target).backgroundColor;
 			}
-		}
+		};
 	}
 
 	deleteAllCards() {
-		let button = document.getElementById('clearAllCards');
-		let self = this;
-		button.onclick = function() {
+		document.getElementById('clearAllCards').onclick = () => {
 			Ajax.deleteAllCards('/cards', (err, res) => {
 				if (err) console.error(err);
 
@@ -237,13 +236,13 @@ class EventListener {
 				}
 				console.log(res);
 			});
-		}
+		};
 	}
 
 	getComponent(dataId) {
 		let component;
 		app.components.cards.forEach((card) => {
-			if (card.dataId == dataId) component = card;
+			if (card.dataId == dataId) { component = card }
 		});
 
 		return component;
@@ -271,8 +270,8 @@ module.exports = EventListener;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/EventListener.js","/")
 },{"./Ajax":1,"./Card":3,"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";var App=require("./App"),app=new App;window.onload=function(){return app.init()},window.app=app;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7d7dd912.js","/")
+"use strict";var App=require("./App");window.app=new App,window.onload=function(){app.init()};
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3a7fa65e.js","/")
 },{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -1670,4 +1669,4 @@ process.chdir = function (dir) {
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/process/browser.js","/../../node_modules/process")
 },{"buffer":7,"rH1JPG":9}]},{},[5])
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkFwcCIsInJlcXVpcmUiLCJhcHAiLCJ3aW5kb3ciLCJvbmxvYWQiLCJpbml0Il0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxLQUFNQyxRQUFRLFNBQ2hCQyxJQUFNLEdBQUlGLElBRWRHLFFBQU9DLE9BQ04sV0FBQSxNQUFNRixLQUFJRyxRQUVYRixPQUFPRCxJQUFNQTs7QUFOYixJQUFNRixNQUFNQyxRQUFRLE9BQVIsQ0FBWjtBQUNBLElBQUlDLE1BQU0sSUFBSUYsR0FBSixFQUFWOztBQUVBRyxPQUFPQyxNQUFQLEdBQ0M7QUFBQSxRQUFNRixJQUFJRyxJQUFKLEVBQU47QUFBQSxDQUREOztBQUdBRixPQUFPRCxHQUFQLEdBQWFBLEdBQWIiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBBcHAgPSByZXF1aXJlKCcuL0FwcCcpO1xubGV0IGFwcCA9IG5ldyBBcHAoKTtcblxud2luZG93Lm9ubG9hZCA9XG5cdCgpID0+IGFwcC5pbml0KCk7XG5cbndpbmRvdy5hcHAgPSBhcHA7XG4iXX0=
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkFwcCIsInJlcXVpcmUiLCJ3aW5kb3ciLCJhcHAiLCJvbmxvYWQiLCJpbml0Il0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxLQUFNQyxRQUFRLFFBR3BCQyxRQUFPQyxJQUFNLEdBQUlILEtBQ2pCRSxPQUFPRSxPQUFTLFdBQ2ZELElBQUlFOztBQUxMLElBQU1MLE1BQU1DLFFBQVEsT0FBUixDQUFaOztBQUdBQyxPQUFPQyxHQUFQLEdBQWEsSUFBSUgsR0FBSixFQUFiO0FBQ0FFLE9BQU9FLE1BQVAsR0FBZ0IsWUFBTTtBQUNyQkQsS0FBSUUsSUFBSjtBQUNBLENBRkQiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBBcHAgPSByZXF1aXJlKCcuL0FwcCcpO1xuXG5cbndpbmRvdy5hcHAgPSBuZXcgQXBwKCk7XG53aW5kb3cub25sb2FkID0gKCkgPT4ge1xuXHRhcHAuaW5pdCgpO1xufTtcbiJdfQ==

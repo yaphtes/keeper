@@ -12,36 +12,31 @@ class EventListener {
 	}
 
 	listenView() {
-		let self = this;
-		document.onclick = function(event) {
+		document.onclick = event => {
 			let target = event.target;
 
 			if (target.classList.contains('card__clear')) {
 				let dataId = target.closest('.card').dataset.id;
-				let component = self.getComponent(dataId);
+				let component = this.getComponent(dataId);
 				component.destroy();
 			}
-		}
+		};
 	}
 
 	listenCardMaker() {
-		let self = this;
-		document.querySelector('.new-card').onclick = function(event) {
+		document.querySelector('.new-card').onclick = event => {
 			let target = event.target;
 
 			if (target.getAttribute('id') == 'post-card') {
-				self.postCard();
+				this.postCard();
 			} else if (target.className.includes('colors-input')) {
-				let bgcolor = getComputedStyle(target).backgroundColor;
-				document.querySelector('.new-card').style.backgroundColor = bgColor;
+				document.querySelector('.new-card').style.backgroundColor = getComputedStyle(target).backgroundColor;
 			}
-		}
+		};
 	}
 
 	deleteAllCards() {
-		let button = document.getElementById('clearAllCards');
-		let self = this;
-		button.onclick = function() {
+		document.getElementById('clearAllCards').onclick = () => {
 			Ajax.deleteAllCards('/cards', (err, res) => {
 				if (err) console.error(err);
 
@@ -51,13 +46,13 @@ class EventListener {
 				}
 				console.log(res);
 			});
-		}
+		};
 	}
 
 	getComponent(dataId) {
 		let component;
 		app.components.cards.forEach((card) => {
-			if (card.dataId == dataId) component = card;
+			if (card.dataId == dataId) { component = card }
 		});
 
 		return component;

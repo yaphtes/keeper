@@ -47,6 +47,7 @@ class Ajax {
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
+
 		http.onload = function() {
 			let dataId = JSON.parse(http.responseText);
 			return cb(null, dataId);
@@ -64,6 +65,7 @@ class Ajax {
 		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send();
+
 
 		http.onload = function() {
 			let response = http.responseText;
