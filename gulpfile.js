@@ -41,6 +41,7 @@ gulp.task('scripts', () => {
 gulp.task('styles', () => {
 	gulp.src(path.sass.src)
 		.pipe(plumber())
+		.pipe(rename('index.css'))
 		.pipe(sourcemaps.init())
 		.pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
 		.pipe(sourcemaps.write())
