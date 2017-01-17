@@ -27,11 +27,12 @@ class Ajax {
 		http.open('DELETE', action);
 		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
 		http.setRequestHeader('Content-Type', 'application/json');
-		http.send(JSON.stringify(dataId));
+		http.send(JSON.stringify(data));
 
 
 		http.onload = function() {
-			let response = http.responseText;
+			let response = JSON.parse(http.responseText);
+			console.log(response);
 			return cb(null, response);
 		};
 
@@ -40,11 +41,47 @@ class Ajax {
 			return cb(status);
 		};
 	}
+
+	static post(action, cb, data) {
+		let http = new XMLHttpRequest();
+		http.open('POST', '/card');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send(JSON.stringify(data));
+
+		http.onload = function() {
+			let dataId = JSON.parse(http.responseText);
+			return cb(null, dataId);
+		};
+
+		http.onerror = function () {
+			let err = http.status;
+			return (err);
+		};
+	}
+
+	static deleteAllCards(action, cb) {
+		let http = new XMLHttpRequest();
+		http.open('DELETE', action);
+		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send();
+
+		http.onload = function() {
+			let response = http.responseText;
+			return cb(null, response);
+		};
+
+		http.onerror = function() {
+			let status = http.status;
+			return cb(status);
+		};
+	}
 }
 
 module.exports = Ajax;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Ajax.js","/")
-},{"buffer":8,"rH1JPG":10}],2:[function(require,module,exports){
+},{"buffer":7,"rH1JPG":9}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 const Ajax = require('./Ajax');
 const Card = require('./Card');
@@ -54,7 +91,9 @@ const EventListener = require('./EventListener');
 class App {
 	constructor() {
 		this.store = {};
-		this.components = {};
+		this.components = {
+			cards: []
+		};
 	}
 
 
@@ -62,9 +101,8 @@ class App {
 		this.getCards((err, cards) => {
 			if (err) return console.error(err);
 			this.store.cards = cards;
-			this.store.cards.forEach((card, i) => {
-				this.components.cards = [];
-				let component = new Card(card);
+			this.store.cards.forEach((data, i) => {
+				let component = new Card(data);
 				let dom = component.render();
 				this.components.cards.push(component);
 				this.components.cards[i].dom = dom;
@@ -91,15 +129,16 @@ class App {
 
 module.exports = App;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/App.js","/")
-},{"./Ajax":1,"./Card":3,"./EventListener":4,"buffer":8,"rH1JPG":10}],3:[function(require,module,exports){
+},{"./Ajax":1,"./Card":3,"./EventListener":4,"buffer":7,"rH1JPG":9}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 const Ajax = require('./Ajax');
 
 class Card {
-	constructor(card) {
-		this.dataId = card._id;
-		this.title = card.title;
-		this.data = card.data;
+	constructor(data) {
+		this.dataId = data._id;
+		this.title = data.title;
+		this.data = data.data;
+		this.bgColor = data.bgColor;
 		this.dom;
 	}
 
@@ -107,10 +146,11 @@ class Card {
 		let container = document.createElement('div');
 		container.dataset.id = this.dataId;
 		container.className = 'card';
+		container.style.backgroundColor = this.bgColor;
 
 
 		let title = document.createElement('h3');
-		title.textContent = this.data;
+		title.textContent = this.title;
 		title.className = 'card__title';
 		container.appendChild(title);
 
@@ -135,16 +175,17 @@ class Card {
 		Ajax.delete('/card', (err, response) => {
 			if (err) return console.error(err);
 			this.dom.remove();
-			console.log(JSON.parse(response));
+			// console.log(response);
 		}, dataId);
 	}
 }
 
 module.exports = Card;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Card.js","/")
-},{"./Ajax":1,"buffer":8,"rH1JPG":10}],4:[function(require,module,exports){
+},{"./Ajax":1,"buffer":7,"rH1JPG":9}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-const handlers = require('./handlers');
+const Ajax = require('./Ajax');
+const Card = require('./Card');
 
 
 class EventListener {
@@ -152,31 +193,54 @@ class EventListener {
 
 	start() {
 		this.listenView();
+		this.listenCardMaker();
+		this.deleteAllCards();
 	}
 
 	listenView() {
+		let self = this;
 		document.onclick = function(event) {
 			let target = event.target;
 
 			if (target.classList.contains('card__clear')) {
 				let dataId = target.closest('.card').dataset.id;
-				let component = handlers.getComponent(dataId);
+				let component = self.getComponent(dataId);
 				component.destroy();
 			}
 		}
 	}
-}
 
-module.exports = EventListener;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/EventListener.js","/")
-},{"./handlers":6,"buffer":8,"rH1JPG":10}],5:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";var App=require("./App"),app=new App;window.onload=function(){return app.init()},window.app=app;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_59a980a3.js","/")
-},{"./App":2,"buffer":8,"rH1JPG":10}],6:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-let handlers = {
-	getComponent: function(dataId) {
+	listenCardMaker() {
+		let self = this;
+		document.querySelector('.new-card').onclick = function(event) {
+			let target = event.target;
+
+			if (target.getAttribute('id') == 'post-card') {
+				self.postCard();
+			} else if (target.className.includes('colors-input')) {
+				let bgcolor = getComputedStyle(target).backgroundColor;
+				self.setBgcolor(bgcolor);
+			}
+		}
+	}
+
+	deleteAllCards() {
+		let button = document.getElementById('clearAllCards');
+		let self = this;
+		button.onclick = function() {
+			Ajax.deleteAllCards('/cards', (err, res) => {
+				if (err) console.error(err);
+
+				let view = document.getElementById('view');
+				while (view.firstElementChild) {
+					view.firstElementChild.remove();
+				}
+				console.log(res);
+			});
+		}
+	}
+
+	getComponent(dataId) {
 		let component;
 		app.components.cards.forEach((card) => {
 			if (card.dataId == dataId) component = card;
@@ -184,11 +248,36 @@ let handlers = {
 
 		return component;
 	}
-};
 
-module.exports = handlers;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/handlers.js","/")
-},{"buffer":8,"rH1JPG":10}],7:[function(require,module,exports){
+	postCard() {
+		let data = {
+			title: document.querySelector('.new-card__title').value,
+			data: document.querySelector('.new-card__text').value,
+			bgColor: getComputedStyle(document.querySelector('.new-card')).backgroundColor
+		};
+		if (data.title == '') return console.error('Empty title');
+
+		let component = new Card(data);
+		Ajax.post('/card', (err, res) => {
+			if (err) return console.error(err);
+			component.dataId = res;
+			component.dom = component.render();
+			app.components.cards.push(component);
+		}, data);
+	}
+
+	setBgcolor(bgColor) {
+		document.querySelector('.new-card').style.backgroundColor = bgColor;
+	}
+}
+
+module.exports = EventListener;
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/EventListener.js","/")
+},{"./Ajax":1,"./Card":3,"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";var App=require("./App"),app=new App;window.onload=function(){return app.init()},window.app=app;
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3d0c2979.js","/")
+},{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -316,7 +405,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/base64-js/lib/b64.js","/../../node_modules/base64-js/lib")
-},{"buffer":8,"rH1JPG":10}],8:[function(require,module,exports){
+},{"buffer":7,"rH1JPG":9}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -1429,7 +1518,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/buffer/index.js","/../../node_modules/buffer")
-},{"base64-js":7,"buffer":8,"ieee754":9,"rH1JPG":10}],9:[function(require,module,exports){
+},{"base64-js":6,"buffer":7,"ieee754":8,"rH1JPG":9}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -1517,7 +1606,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/ieee754/index.js","/../../node_modules/ieee754")
-},{"buffer":8,"rH1JPG":10}],10:[function(require,module,exports){
+},{"buffer":7,"rH1JPG":9}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -1584,5 +1673,5 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/process/browser.js","/../../node_modules/process")
-},{"buffer":8,"rH1JPG":10}]},{},[5])
+},{"buffer":7,"rH1JPG":9}]},{},[5])
 //# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkFwcCIsInJlcXVpcmUiLCJhcHAiLCJ3aW5kb3ciLCJvbmxvYWQiLCJpbml0Il0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxLQUFNQyxRQUFRLFNBQ2hCQyxJQUFNLEdBQUlGLElBRWRHLFFBQU9DLE9BQ04sV0FBQSxNQUFNRixLQUFJRyxRQUVYRixPQUFPRCxJQUFNQTs7QUFOYixJQUFNRixNQUFNQyxRQUFRLE9BQVIsQ0FBWjtBQUNBLElBQUlDLE1BQU0sSUFBSUYsR0FBSixFQUFWOztBQUVBRyxPQUFPQyxNQUFQLEdBQ0M7QUFBQSxRQUFNRixJQUFJRyxJQUFKLEVBQU47QUFBQSxDQUREOztBQUdBRixPQUFPRCxHQUFQLEdBQWFBLEdBQWIiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBBcHAgPSByZXF1aXJlKCcuL0FwcCcpO1xubGV0IGFwcCA9IG5ldyBBcHAoKTtcblxud2luZG93Lm9ubG9hZCA9XG5cdCgpID0+IGFwcC5pbml0KCk7XG5cbndpbmRvdy5hcHAgPSBhcHA7XG4iXX0=

@@ -6,7 +6,9 @@ const EventListener = require('./EventListener');
 class App {
 	constructor() {
 		this.store = {};
-		this.components = {};
+		this.components = {
+			cards: []
+		};
 	}
 
 
@@ -14,9 +16,8 @@ class App {
 		this.getCards((err, cards) => {
 			if (err) return console.error(err);
 			this.store.cards = cards;
-			this.store.cards.forEach((card, i) => {
-				this.components.cards = [];
-				let component = new Card(card);
+			this.store.cards.forEach((data, i) => {
+				let component = new Card(data);
 				let dom = component.render();
 				this.components.cards.push(component);
 				this.components.cards[i].dom = dom;

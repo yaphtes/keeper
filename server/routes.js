@@ -9,5 +9,7 @@ module.exports = function(app) {
 
 	// cards routes
 	app.get('/cards', cards.getCards);
+	app.post('/card', cards.postCard);
 	app.delete('/card', cards.deleteCard);
+	app.delete('/cards', cards.deleteAllCards);
 };

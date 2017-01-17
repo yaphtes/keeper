@@ -1,10 +1,11 @@
 const Ajax = require('./Ajax');
 
 class Card {
-	constructor(card) {
-		this.dataId = card._id;
-		this.title = card.title;
-		this.data = card.data;
+	constructor(data) {
+		this.dataId = data._id;
+		this.title = data.title;
+		this.data = data.data;
+		this.bgColor = data.bgColor;
 		this.dom;
 	}
 
@@ -12,10 +13,11 @@ class Card {
 		let container = document.createElement('div');
 		container.dataset.id = this.dataId;
 		container.className = 'card';
+		container.style.backgroundColor = this.bgColor;
 
 
 		let title = document.createElement('h3');
-		title.textContent = this.data;
+		title.textContent = this.title;
 		title.className = 'card__title';
 		container.appendChild(title);
 
@@ -40,7 +42,7 @@ class Card {
 		Ajax.delete('/card', (err, response) => {
 			if (err) return console.error(err);
 			this.dom.remove();
-			console.log(JSON.parse(response));
+			// console.log(response);
 		}, dataId);
 	}
 }
