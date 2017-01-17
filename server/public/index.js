@@ -1,26 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-let ajax = 'ajax module';
-
-module.exports = { Ajax: ajax };
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Ajax.js","/")
-},{"buffer":6,"rH1JPG":8}],2:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-let card = 'card module';
-
-module.exports = { Card: card };
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Card.js","/")
-},{"buffer":6,"rH1JPG":8}],3:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-let cardView = 'cardView module';
-
-module.exports = { CardView: cardView };
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/CardView.js","/")
-},{"buffer":6,"rH1JPG":8}],4:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";var Ajax=require("./Ajax"),Card=require("./Card"),CardView=require("./CardView"),main="main.js";
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5c5fb6e1.js","/")
-},{"./Ajax":1,"./Card":2,"./CardView":3,"buffer":6,"rH1JPG":8}],5:[function(require,module,exports){
+"use strict";console.log(2);
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_16e9b338.js","/")
+},{"buffer":3,"rH1JPG":5}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -148,7 +130,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/base64-js/lib/b64.js","/../../node_modules/base64-js/lib")
-},{"buffer":6,"rH1JPG":8}],6:[function(require,module,exports){
+},{"buffer":3,"rH1JPG":5}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -1261,7 +1243,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/buffer/index.js","/../../node_modules/buffer")
-},{"base64-js":5,"buffer":6,"ieee754":7,"rH1JPG":8}],7:[function(require,module,exports){
+},{"base64-js":2,"buffer":3,"ieee754":4,"rH1JPG":5}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -1349,7 +1331,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/ieee754/index.js","/../../node_modules/ieee754")
-},{"buffer":6,"rH1JPG":8}],8:[function(require,module,exports){
+},{"buffer":3,"rH1JPG":5}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -1416,5 +1398,5 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/process/browser.js","/../../node_modules/process")
-},{"buffer":6,"rH1JPG":8}]},{},[4])
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1haW4uanMiXSwibmFtZXMiOlsiQWpheCIsInJlcXVpcmUiLCJDYXJkIiwiQ2FyZFZpZXciLCJtYWluIl0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxNQUFPQyxRQUFRLFVBQ2ZDLEtBQU9ELFFBQVEsVUFDZkUsU0FBV0YsUUFBUSxjQUdyQkcsS0FBTzs7QUFMWCxJQUFNSixPQUFPQyxRQUFRLFFBQVIsQ0FBYjtBQUNBLElBQU1DLE9BQU9ELFFBQVEsUUFBUixDQUFiO0FBQ0EsSUFBTUUsV0FBV0YsUUFBUSxZQUFSLENBQWpCOztBQUdBLElBQUlHLE9BQU8sU0FBWCIsImZpbGUiOiJtYWluLmpzIiwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgQWpheCA9IHJlcXVpcmUoJy4vQWpheCcpO1xuY29uc3QgQ2FyZCA9IHJlcXVpcmUoJy4vQ2FyZCcpO1xuY29uc3QgQ2FyZFZpZXcgPSByZXF1aXJlKCcuL0NhcmRWaWV3Jyk7XG5cblxubGV0IG1haW4gPSAnbWFpbi5qcyc7Il19
+},{"buffer":3,"rH1JPG":5}]},{},[1])
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbImNvbnNvbGUiLCJsb2ciXSwibWFwcGluZ3MiOiJZQUFBQSxTQUFRQyxJQUFJOztBQUFaRCxRQUFRQyxHQUFSLENBQVksQ0FBWiIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImNvbnNvbGUubG9nKDIpOyJdfQ==

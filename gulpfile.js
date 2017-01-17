@@ -6,10 +6,11 @@ const rename = require('gulp-rename');
 const browserify = require('gulp-browserify');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
+const plumber = require('gulp-plumber');
 const path = {
 	javascript: {
 		watching: './client/javascript/**/*.js',
-		src: './client/javascript/main.js',
+		src: './client/javascript/index.js',
 		bundle: './server/public/'
 	},
 	sass: {
@@ -23,6 +24,7 @@ const path = {
 
 gulp.task('scripts', () => {
 	gulp.src(path.javascript.src)
+		.pipe(plumber())
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(babel({
 			presets: ['es2015']
@@ -32,14 +34,17 @@ gulp.task('scripts', () => {
 			insertGlobals: true
 		}))
 		.pipe(sourcemaps.write())
+		.pipe(plumber.stop())
 		.pipe(gulp.dest(path.javascript.bundle));
 });
 
 gulp.task('styles', () => {
 	gulp.src(path.sass.src)
+		.pipe(plumber())
 		.pipe(sourcemaps.init())
 		.pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
 		.pipe(sourcemaps.write())
+		.pipe(plumber.stop())
 		.pipe(gulp.dest(path.sass.bundle));
 });
 

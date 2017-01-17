@@ -6,17 +6,16 @@ const pug = require('pug');
 const favicon = require('express-favicon');
 const app = express();
 
-app.set('views', './views');
+app.set('views', __dirname +'/views');
 app.set('view engine', 'pug');
 
-app.use(express.static('./public'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(favicon(__dirname + '/public/favicon.png'));
 mongoose.connect('mongodb://localhost');
 
-
-
+// routes
 app.get('/', function (req, res) {
 	res.send('Hello World!');
 });
