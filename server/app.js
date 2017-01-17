@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const formidable = require('formidable');
+// const formidable = require('formidable');
 const mongoose = require('mongoose');
 const pug = require('pug');
-const favicon = require('express-favicon');
+const favicon = require('serve-favicon');
 const app = express();
 
 app.set('views', __dirname +'/views');

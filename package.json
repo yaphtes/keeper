@@ -34,9 +34,9 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "express-favicon": "^2.0.0",
     "formidable": "^1.1.1",
     "mongoose": "^4.7.7",
-    "pug": "^2.0.0-beta6"
+    "pug": "^2.0.0-beta6",
+    "serve-favicon": "^2.3.2"
   }
 }
