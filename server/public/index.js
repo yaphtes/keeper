@@ -21,14 +21,30 @@ class Ajax {
 		};
 	}
 
-	static delete(action, cb) {
+	static delete(action, cb, dataId) {
+		let data = { dataId };
+		let http = new XMLHttpRequest();
+		http.open('DELETE', action);
+		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send(JSON.stringify(dataId));
 
+
+		http.onload = function() {
+			let response = http.responseText;
+			return cb(null, response);
+		};
+
+		http.onerror = function () {
+			let status = http.status;
+			return cb(status);
+		};
 	}
 }
 
 module.exports = Ajax;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Ajax.js","/")
-},{"buffer":7,"rH1JPG":9}],2:[function(require,module,exports){
+},{"buffer":8,"rH1JPG":10}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 const Ajax = require('./Ajax');
 const Card = require('./Card');
@@ -38,17 +54,20 @@ const EventListener = require('./EventListener');
 class App {
 	constructor() {
 		this.store = {};
+		this.components = {};
 	}
 
 
 	init() {
 		this.getCards((err, cards) => {
-			if (err) return this.showError(err);
+			if (err) return console.error(err);
 			this.store.cards = cards;
 			this.store.cards.forEach((card, i) => {
+				this.components.cards = [];
 				let component = new Card(card);
 				let dom = component.render();
-				this.store.cards[i].dom = dom;
+				this.components.cards.push(component);
+				this.components.cards[i].dom = dom;
 			});
 		});
 
@@ -67,18 +86,15 @@ class App {
 		let eventListener = new EventListener();
 		eventListener.start();
 	}
-
-	showError(err) {
-		// TODO: написать вывод ошибки
-		console.log(err);
-	}
 }
 
 
 module.exports = App;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/App.js","/")
-},{"./Ajax":1,"./Card":3,"./EventListener":4,"buffer":7,"rH1JPG":9}],3:[function(require,module,exports){
+},{"./Ajax":1,"./Card":3,"./EventListener":4,"buffer":8,"rH1JPG":10}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+const Ajax = require('./Ajax');
+
 class Card {
 	constructor(card) {
 		this.dataId = card._id;
@@ -89,7 +105,7 @@ class Card {
 
 	render() {
 		let container = document.createElement('div');
-		container.setAttribute('data-id', this.dataId);
+		container.dataset.id = this.dataId;
 		container.className = 'card';
 
 
@@ -107,36 +123,45 @@ class Card {
 		clear.className = 'card__clear';
 		container.appendChild(clear);
 
-
-
 		document.getElementById('view').appendChild(container);
-
 		this.dom = document.querySelector(`div[data-id="${this.dataId}"]`);
 
 		return this.dom;
 	}
 
-	destroy(dataId) {
-		// TODO: написать код уничтожения карточки
+	destroy() {
+		let dataId = this.dataId;
+
+		Ajax.delete('/card', (err, response) => {
+			if (err) return console.error(err);
+			this.dom.remove();
+			console.log(JSON.parse(response));
+		}, dataId);
 	}
 }
 
 module.exports = Card;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/Card.js","/")
-},{"buffer":7,"rH1JPG":9}],4:[function(require,module,exports){
+},{"./Ajax":1,"buffer":8,"rH1JPG":10}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-// const Card = require('./Card');
+const handlers = require('./handlers');
+
 
 class EventListener {
 	constructor() { }
 
 	start() {
+		this.listenView();
+	}
+
+	listenView() {
 		document.onclick = function(event) {
 			let target = event.target;
 
-
 			if (target.classList.contains('card__clear')) {
-				// TODO: как-то удалить карточку, не пойму как воспользоваться методами класса Card, создавать новый объект Card - это неправильно, мне кажется
+				let dataId = target.closest('.card').dataset.id;
+				let component = handlers.getComponent(dataId);
+				component.destroy();
 			}
 		}
 	}
@@ -144,11 +169,26 @@ class EventListener {
 
 module.exports = EventListener;
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/EventListener.js","/")
-},{"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
+},{"./handlers":6,"buffer":8,"rH1JPG":10}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";var App=require("./App"),app=new App;window.onload=function(){app.init()},window.app=app;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d90e52b2.js","/")
-},{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
+"use strict";var App=require("./App"),app=new App;window.onload=function(){return app.init()},window.app=app;
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_59a980a3.js","/")
+},{"./App":2,"buffer":8,"rH1JPG":10}],6:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+let handlers = {
+	getComponent: function(dataId) {
+		let component;
+		app.components.cards.forEach((card) => {
+			if (card.dataId == dataId) component = card;
+		});
+
+		return component;
+	}
+};
+
+module.exports = handlers;
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/handlers.js","/")
+},{"buffer":8,"rH1JPG":10}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -276,7 +316,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/base64-js/lib/b64.js","/../../node_modules/base64-js/lib")
-},{"buffer":7,"rH1JPG":9}],7:[function(require,module,exports){
+},{"buffer":8,"rH1JPG":10}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -1389,7 +1429,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/buffer/index.js","/../../node_modules/buffer")
-},{"base64-js":6,"buffer":7,"ieee754":8,"rH1JPG":9}],8:[function(require,module,exports){
+},{"base64-js":7,"buffer":8,"ieee754":9,"rH1JPG":10}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -1477,7 +1517,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/ieee754/index.js","/../../node_modules/ieee754")
-},{"buffer":7,"rH1JPG":9}],9:[function(require,module,exports){
+},{"buffer":8,"rH1JPG":10}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -1544,5 +1584,5 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/process/browser.js","/../../node_modules/process")
-},{"buffer":7,"rH1JPG":9}]},{},[5])
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkFwcCIsInJlcXVpcmUiLCJhcHAiLCJ3aW5kb3ciLCJvbmxvYWQiLCJpbml0Il0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxLQUFNQyxRQUFRLFNBQ2hCQyxJQUFNLEdBQUlGLElBRWRHLFFBQU9DLE9BQVMsV0FBYUYsSUFBSUcsUUFDakNGLE9BQU9ELElBQU1BOztBQUpiLElBQU1GLE1BQU1DLFFBQVEsT0FBUixDQUFaO0FBQ0EsSUFBSUMsTUFBTSxJQUFJRixHQUFKLEVBQVY7O0FBRUFHLE9BQU9DLE1BQVAsR0FBZ0IsWUFBVztBQUFFRixNQUFJRyxJQUFKO0FBQVksQ0FBekM7QUFDQUYsT0FBT0QsR0FBUCxHQUFhQSxHQUFiIiwiZmlsZSI6ImluZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgQXBwID0gcmVxdWlyZSgnLi9BcHAnKTtcbmxldCBhcHAgPSBuZXcgQXBwKCk7XG5cbndpbmRvdy5vbmxvYWQgPSBmdW5jdGlvbigpIHsgYXBwLmluaXQoKSB9O1xud2luZG93LmFwcCA9IGFwcDtcbiJdfQ==
+},{"buffer":8,"rH1JPG":10}]},{},[5])
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkFwcCIsInJlcXVpcmUiLCJhcHAiLCJ3aW5kb3ciLCJvbmxvYWQiLCJpbml0Il0sIm1hcHBpbmdzIjoiWUFBQSxJQUFNQSxLQUFNQyxRQUFRLFNBQ2hCQyxJQUFNLEdBQUlGLElBRWRHLFFBQU9DLE9BQ04sV0FBQSxNQUFNRixLQUFJRyxRQUVYRixPQUFPRCxJQUFNQTs7QUFOYixJQUFNRixNQUFNQyxRQUFRLE9BQVIsQ0FBWjtBQUNBLElBQUlDLE1BQU0sSUFBSUYsR0FBSixFQUFWOztBQUVBRyxPQUFPQyxNQUFQLEdBQ0M7QUFBQSxRQUFNRixJQUFJRyxJQUFKLEVBQU47QUFBQSxDQUREOztBQUdBRixPQUFPRCxHQUFQLEdBQWFBLEdBQWIiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBBcHAgPSByZXF1aXJlKCcuL0FwcCcpO1xubGV0IGFwcCA9IG5ldyBBcHAoKTtcblxud2luZG93Lm9ubG9hZCA9XG5cdCgpID0+IGFwcC5pbml0KCk7XG5cbndpbmRvdy5hcHAgPSBhcHA7XG4iXX0=

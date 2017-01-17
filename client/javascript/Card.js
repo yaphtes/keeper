@@ -1,3 +1,5 @@
+const Ajax = require('./Ajax');
+
 class Card {
 	constructor(card) {
 		this.dataId = card._id;
@@ -8,7 +10,7 @@ class Card {
 
 	render() {
 		let container = document.createElement('div');
-		container.setAttribute('data-id', this.dataId);
+		container.dataset.id = this.dataId;
 		container.className = 'card';
 
 
@@ -26,17 +28,20 @@ class Card {
 		clear.className = 'card__clear';
 		container.appendChild(clear);
 
-
-
 		document.getElementById('view').appendChild(container);
-
 		this.dom = document.querySelector(`div[data-id="${this.dataId}"]`);
 
 		return this.dom;
 	}
 
-	destroy(dataId) {
-		// TODO: написать код уничтожения карточки
+	destroy() {
+		let dataId = this.dataId;
+
+		Ajax.delete('/card', (err, response) => {
+			if (err) return console.error(err);
+			this.dom.remove();
+			console.log(JSON.parse(response));
+		}, dataId);
 	}
 }
 

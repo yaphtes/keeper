@@ -6,17 +6,20 @@ const EventListener = require('./EventListener');
 class App {
 	constructor() {
 		this.store = {};
+		this.components = {};
 	}
 
 
 	init() {
 		this.getCards((err, cards) => {
-			if (err) return this.showError(err);
+			if (err) return console.error(err);
 			this.store.cards = cards;
 			this.store.cards.forEach((card, i) => {
+				this.components.cards = [];
 				let component = new Card(card);
 				let dom = component.render();
-				this.store.cards[i].dom = dom;
+				this.components.cards.push(component);
+				this.components.cards[i].dom = dom;
 			});
 		});
 
@@ -34,11 +37,6 @@ class App {
 	listenEvents() {
 		let eventListener = new EventListener();
 		eventListener.start();
-	}
-
-	showError(err) {
-		// TODO: написать вывод ошибки
-		console.log(err);
 	}
 }
 

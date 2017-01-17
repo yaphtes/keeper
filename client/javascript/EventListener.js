@@ -1,15 +1,21 @@
-// const Card = require('./Card');
+const handlers = require('./handlers');
+
 
 class EventListener {
 	constructor() { }
 
 	start() {
+		this.listenView();
+	}
+
+	listenView() {
 		document.onclick = function(event) {
 			let target = event.target;
 
-
 			if (target.classList.contains('card__clear')) {
-				// TODO: как-то удалить карточку, не пойму как воспользоваться методами класса Card, создавать новый объект Card - это неправильно, мне кажется
+				let dataId = target.closest('.card').dataset.id;
+				let component = handlers.getComponent(dataId);
+				component.destroy();
 			}
 		}
 	}

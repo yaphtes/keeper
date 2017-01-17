@@ -9,5 +9,17 @@ module.exports = {
 			data.cards = cards;
 			res.send(data);
 		});
+	},
+
+	deleteCard: function(req, res) {
+		let id = req.body.dataId;
+
+		Card.findByIdAndRemove(id, (err, card) => {
+			let response = {
+				message: 'Card successfully deleted',
+				id: card._id
+			};
+			res.send(response);
+		});
 	}
 };
