@@ -33,7 +33,7 @@ class EventListener {
 				self.postCard();
 			} else if (target.className.includes('colors-input')) {
 				let bgcolor = getComputedStyle(target).backgroundColor;
-				self.setBgcolor(bgcolor);
+				document.querySelector('.new-card').style.backgroundColor = bgColor;
 			}
 		}
 	}
@@ -78,10 +78,6 @@ class EventListener {
 			component.dom = component.render();
 			app.components.cards.push(component);
 		}, data);
-	}
-
-	setBgcolor(bgColor) {
-		document.querySelector('.new-card').style.backgroundColor = bgColor;
 	}
 }
 

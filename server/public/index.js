@@ -219,7 +219,7 @@ class EventListener {
 				self.postCard();
 			} else if (target.className.includes('colors-input')) {
 				let bgcolor = getComputedStyle(target).backgroundColor;
-				self.setBgcolor(bgcolor);
+				document.querySelector('.new-card').style.backgroundColor = bgColor;
 			}
 		}
 	}
@@ -265,10 +265,6 @@ class EventListener {
 			app.components.cards.push(component);
 		}, data);
 	}
-
-	setBgcolor(bgColor) {
-		document.querySelector('.new-card').style.backgroundColor = bgColor;
-	}
 }
 
 module.exports = EventListener;
@@ -276,7 +272,7 @@ module.exports = EventListener;
 },{"./Ajax":1,"./Card":3,"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";var App=require("./App"),app=new App;window.onload=function(){return app.init()},window.app=app;
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3d0c2979.js","/")
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7d7dd912.js","/")
 },{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
