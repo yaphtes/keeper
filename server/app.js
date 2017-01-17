@@ -12,13 +12,11 @@ app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(favicon(__dirname + '/public/favicon.png'));
+app.use(favicon(__dirname + '/public/images/favicon.png'));
 mongoose.connect('mongodb://localhost');
 
 // routes
-app.get('/', function (req, res) {
-	res.send('Hello World!');
-});
+require('./routes')(app);
 
 app.use((req, res, next) => {
 	res.status(404).render('404');
