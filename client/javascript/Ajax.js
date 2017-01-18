@@ -4,7 +4,7 @@ class Ajax {
 	static get(action, cb) {
 		let http = new XMLHttpRequest();
 		http.open('GET', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.send();
 
 
@@ -23,7 +23,7 @@ class Ajax {
 		let data = { dataId };
 		let http = new XMLHttpRequest();
 		http.open('DELETE', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
@@ -43,7 +43,7 @@ class Ajax {
 	static post(action, cb, data) {
 		let http = new XMLHttpRequest();
 		http.open('POST', '/card');
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
@@ -62,13 +62,30 @@ class Ajax {
 	static deleteAllCards(action, cb) {
 		let http = new XMLHttpRequest();
 		http.open('DELETE', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
-		http.setRequestHeader('Content-Type', 'application/json');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.send();
 
 
 		http.onload = function() {
 			let response = http.responseText;
+			return cb(null, response);
+		};
+
+		http.onerror = function() {
+			let status = http.status;
+			return cb(status);
+		};
+	}
+
+	static updateOne(action, cb, data) {
+		let http = new XMLHttpRequest();
+		http.open('PUT', action);
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send(JSON.stringify(data));
+
+		http.onload = function() {
+			let response = JSON.parse(http.responseText);
 			return cb(null, response);
 		};
 

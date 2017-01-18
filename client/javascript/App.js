@@ -23,7 +23,6 @@ class App {
 				this.components.cards[i].dom = dom;
 			});
 		});
-
 		this.listenEvents();
 	}
 

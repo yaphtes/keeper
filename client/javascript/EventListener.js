@@ -9,6 +9,7 @@ class EventListener {
 		this.listenView();
 		this.listenCardMaker();
 		this.deleteAllCards();
+		this.listenUpdateCard();
 	}
 
 	listenView() {
@@ -17,7 +18,7 @@ class EventListener {
 
 			if (target.classList.contains('card__clear')) {
 				let dataId = target.closest('.card').dataset.id;
-				let component = this.getComponent(dataId);
+				let component = this.getComponentFromDataId(dataId);
 				component.destroy();
 			}
 		};
@@ -49,8 +50,24 @@ class EventListener {
 		};
 	}
 
-	getComponent(dataId) {
-		let component;
+	listenUpdateCard() {
+		let view = document.getElementById('view');
+
+		view.onclick = event => {
+			let target = event.target;
+
+			if (target.className.includes('card__title')) { this.updateOne(target, 'title') };
+			if (target.className.includes('card__data')) { this.updateOne(target, 'data') };
+			if (target.className.includes('colors-input_')) {
+				let parent = target.closest('.card');
+				parent.style.backgroundColor = getComputedStyle(target).backgroundColor;
+				this.updateOne(target, 'bgColor')
+			}
+		};
+	}
+
+	getComponentFromDataId(dataId) {
+		let component = null;
 		app.components.cards.forEach((card) => {
 			if (card.dataId == dataId) { component = card }
 		});
@@ -73,6 +90,53 @@ class EventListener {
 			component.dom = component.render();
 			app.components.cards.push(component);
 		}, data);
+	}
+
+	getDataFromComponent(component, dataId = component._id) {
+		let data = {
+			title: component.title,
+			data: component.title,
+			id: component.dataId,
+			bgColor: component.bgColor
+		};
+
+		return data;
+	}
+
+	updateOne(target, whatUpdate) {
+		let dataId = target.closest('.card').dataset.id;
+		let component = this.getComponentFromDataId(dataId);
+
+
+		if (whatUpdate == 'title' || whatUpdate == 'data') {
+			target.onblur = () => {
+				switch (whatUpdate) {
+					case 'title':
+						let newTitle = target.textContent;
+						component.title = newTitle;
+						break;
+					case 'data':
+						let newData = target.textContent;
+						component.data = newData;
+
+				}
+				let data = this.getDataFromComponent(component, dataId);
+				data.type = whatUpdate;
+			};
+
+		} else if (whatUpdate == 'bgColor') {
+			let newBgColor = getComputedStyle(target).backgroundColor;
+			component.bgColor = newBgColor;
+
+			let data = this.getDataFromComponent(component, dataId);
+			data.type = whatUpdate;
+
+
+			Ajax.updateOne('/card', (err, res) => {
+				if (err) console.err('Cant update this card, sorry.')
+				console.log(res);
+			}, data);
+		}
 	}
 }
 

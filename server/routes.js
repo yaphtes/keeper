@@ -12,4 +12,5 @@ module.exports = function(app) {
 	app.post('/card', cards.postCard);
 	app.delete('/card', cards.deleteCard);
 	app.delete('/cards', cards.deleteAllCards);
+	app.put('/card', cards.updateOne);
 };

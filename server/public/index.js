@@ -6,7 +6,7 @@ class Ajax {
 	static get(action, cb) {
 		let http = new XMLHttpRequest();
 		http.open('GET', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.send();
 
 
@@ -25,7 +25,7 @@ class Ajax {
 		let data = { dataId };
 		let http = new XMLHttpRequest();
 		http.open('DELETE', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
@@ -45,7 +45,7 @@ class Ajax {
 	static post(action, cb, data) {
 		let http = new XMLHttpRequest();
 		http.open('POST', '/card');
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.setRequestHeader('Content-Type', 'application/json');
 		http.send(JSON.stringify(data));
 
@@ -64,13 +64,30 @@ class Ajax {
 	static deleteAllCards(action, cb) {
 		let http = new XMLHttpRequest();
 		http.open('DELETE', action);
-		http.setRequestHeader('X-Requested-With', 'XMLHttpReques');
-		http.setRequestHeader('Content-Type', 'application/json');
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		http.send();
 
 
 		http.onload = function() {
 			let response = http.responseText;
+			return cb(null, response);
+		};
+
+		http.onerror = function() {
+			let status = http.status;
+			return cb(status);
+		};
+	}
+
+	static updateOne(action, cb, data) {
+		let http = new XMLHttpRequest();
+		http.open('PUT', action);
+		http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send(JSON.stringify(data));
+
+		http.onload = function() {
+			let response = JSON.parse(http.responseText);
 			return cb(null, response);
 		};
 
@@ -110,7 +127,6 @@ class App {
 				this.components.cards[i].dom = dom;
 			});
 		});
-
 		this.listenEvents();
 	}
 
@@ -156,11 +172,46 @@ class Card {
 		title.textContent = this.title;
 		title.className = 'card__title';
 		container.appendChild(title);
+		title.contentEditable = true;
 
 		let data = document.createElement('div');
 		data.textContent = this.data;
 		data.className = 'card__data';
 		container.appendChild(data);
+		data.contentEditable = true;
+
+		let colorInputs = document.createElement('div');
+		colorInputs.className = 'colors-input';
+		container.appendChild(colorInputs);
+
+		let colorInputsDefault = document.createElement('button');
+		colorInputsDefault.className = 'colors-input__white';
+		colorInputs.appendChild(colorInputsDefault);
+
+		let colorInputsBlue = document.createElement('button');
+		colorInputsBlue.className = 'colors-input__blue';
+		colorInputs.appendChild(colorInputsBlue);
+
+		let colorInputsYellow = document.createElement('button');
+		colorInputsYellow.className = 'colors-input__yellow';
+		colorInputs.appendChild(colorInputsYellow);
+
+		let colorInputsRed = document.createElement('button');
+		colorInputsRed.className = 'colors-input__red';
+		colorInputs.appendChild(colorInputsRed);
+
+		let colorInputsGreen = document.createElement('button');
+		colorInputsGreen.className = 'colors-input__green';
+		colorInputs.appendChild(colorInputsGreen);
+
+		let colorInputsGrey = document.createElement('button');
+		colorInputsGrey.className = 'colors-input__grey';
+		colorInputs.appendChild(colorInputsGrey);
+
+		let colorInputsOrange = document.createElement('button');
+		colorInputsOrange.className = 'colors-input__orange';
+		colorInputs.appendChild(colorInputsOrange);
+
 
 		let clear = document.createElement('button');
 		clear.className = 'card__clear';
@@ -179,7 +230,7 @@ class Card {
 		Ajax.delete('/card', (err, response) => {
 			if (err) return console.error(err);
 			this.dom.remove();
-			// console.log(response);
+			 console.log(response);
 		}, dataId);
 	}
 }
@@ -199,6 +250,7 @@ class EventListener {
 		this.listenView();
 		this.listenCardMaker();
 		this.deleteAllCards();
+		this.listenUpdateCard();
 	}
 
 	listenView() {
@@ -207,7 +259,7 @@ class EventListener {
 
 			if (target.classList.contains('card__clear')) {
 				let dataId = target.closest('.card').dataset.id;
-				let component = this.getComponent(dataId);
+				let component = this.getComponentFromDataId(dataId);
 				component.destroy();
 			}
 		};
@@ -239,8 +291,24 @@ class EventListener {
 		};
 	}
 
-	getComponent(dataId) {
-		let component;
+	listenUpdateCard() {
+		let view = document.getElementById('view');
+
+		view.onclick = event => {
+			let target = event.target;
+
+			if (target.className.includes('card__title')) { this.updateOne(target, 'title') };
+			if (target.className.includes('card__data')) { this.updateOne(target, 'data') };
+			if (target.className.includes('colors-input_')) {
+				let parent = target.closest('.card');
+				parent.style.backgroundColor = getComputedStyle(target).backgroundColor;
+				this.updateOne(target, 'bgColor')
+			}
+		};
+	}
+
+	getComponentFromDataId(dataId) {
+		let component = null;
 		app.components.cards.forEach((card) => {
 			if (card.dataId == dataId) { component = card }
 		});
@@ -264,6 +332,53 @@ class EventListener {
 			app.components.cards.push(component);
 		}, data);
 	}
+
+	getDataFromComponent(component, dataId = component._id) {
+		let data = {
+			title: component.title,
+			data: component.title,
+			id: component.dataId,
+			bgColor: component.bgColor
+		};
+
+		return data;
+	}
+
+	updateOne(target, whatUpdate) {
+		let dataId = target.closest('.card').dataset.id;
+		let component = this.getComponentFromDataId(dataId);
+
+
+		if (whatUpdate == 'title' || whatUpdate == 'data') {
+			target.onblur = () => {
+				switch (whatUpdate) {
+					case 'title':
+						let newTitle = target.textContent;
+						component.title = newTitle;
+						break;
+					case 'data':
+						let newData = target.textContent;
+						component.data = newData;
+
+				}
+				let data = this.getDataFromComponent(component, dataId);
+				data.type = whatUpdate;
+			};
+
+		} else if (whatUpdate == 'bgColor') {
+			let newBgColor = getComputedStyle(target).backgroundColor;
+			component.bgColor = newBgColor;
+
+			let data = this.getDataFromComponent(component, dataId);
+			data.type = whatUpdate;
+
+
+			Ajax.updateOne('/card', (err, res) => {
+				if (err) console.err('Cant update this card, sorry.')
+				console.log(res);
+			}, data);
+		}
+	}
 }
 
 module.exports = EventListener;
@@ -271,7 +386,7 @@ module.exports = EventListener;
 },{"./Ajax":1,"./Card":3,"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";var App=require("./App");window.app=new App,window.onload=function(){app.init()};
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3a7fa65e.js","/")
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bdeef3b.js","/")
 },{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';

@@ -1,4 +1,5 @@
-const Card = require('../model/Card');
+const Card = require('../model/Card.js');
+
 
 module.exports = {
 	getCards: function(req, res) {
@@ -12,9 +13,7 @@ module.exports = {
 	},
 
 	deleteCard: function(req, res) {
-		let id = req.body.dataId;
-
-		Card.findByIdAndRemove(id, (err, card) => {
+		Card.findByIdAndRemove(req.body.dataId, (err, card) => {
 			let response = {
 				message: 'Card successfully deleted',
 				id: card._id
@@ -24,8 +23,6 @@ module.exports = {
 	},
 
 	postCard: function(req, res) {
-		let dataId;
-
 		let card = new Card(req.body);
 		card.save((err, savedCard) => {
 			if (err) res.send(err);
@@ -38,5 +35,44 @@ module.exports = {
 			if (err) return res.send(err);
 			res.send('Clear successull');
 		});
+	},
+
+	updateOne: function(req, res) {
+		let type = req.body.type;
+		let id = req.body.id;
+
+
+		switch (type) {
+			case 'title':
+				Card.findByIdAndUpdate(id, { title: req.body.title }, (err, card) => {
+					let response = {
+						message: 'Title of card successfully updated',
+						id: card._id
+					};
+					res.send(response);
+				});
+				break;
+			case 'data':
+				Card.findByIdAndUpdate(id, { data: req.body.data }, (err, card) => {
+					let response = {
+						message: 'Data of card successfully updated',
+						id: card._id
+					};
+					res.send(response);
+				});
+				break;
+			case 'bgColor':
+				Card.findByIdAndUpdate(id, { bgColor: req.body.bgColor }, (err, card) => {
+					let response = {
+						message: 'Background color of card successfully updated',
+						id: card._id
+					};
+					res.send(response);
+				});
+				break;
+			default:
+				res.sendStatus(500);
+				break;
+		}
 	}
 };
