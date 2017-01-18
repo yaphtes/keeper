@@ -253,6 +253,7 @@ class EventListener {
 		this.listenUpdateCard();
 	}
 
+
 	listenView() {
 		document.onclick = event => {
 			let target = event.target;
@@ -265,6 +266,7 @@ class EventListener {
 		};
 	}
 
+
 	listenCardMaker() {
 		document.querySelector('.new-card').onclick = event => {
 			let target = event.target;
@@ -276,6 +278,7 @@ class EventListener {
 			}
 		};
 	}
+
 
 	deleteAllCards() {
 		document.getElementById('clearAllCards').onclick = () => {
@@ -290,6 +293,7 @@ class EventListener {
 			});
 		};
 	}
+
 
 	listenUpdateCard() {
 		let view = document.getElementById('view');
@@ -307,6 +311,7 @@ class EventListener {
 		};
 	}
 
+
 	getComponentFromDataId(dataId) {
 		let component = null;
 		app.components.cards.forEach((card) => {
@@ -315,6 +320,7 @@ class EventListener {
 
 		return component;
 	}
+
 
 	postCard() {
 		let data = {
@@ -333,6 +339,7 @@ class EventListener {
 		}, data);
 	}
 
+
 	getDataFromComponent(component, dataId = component._id) {
 		let data = {
 			title: component.title,
@@ -343,6 +350,7 @@ class EventListener {
 
 		return data;
 	}
+
 
 	updateOne(target, whatUpdate) {
 		let dataId = target.closest('.card').dataset.id;
@@ -386,7 +394,7 @@ module.exports = EventListener;
 },{"./Ajax":1,"./Card":3,"buffer":7,"rH1JPG":9}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";var App=require("./App");window.app=new App,window.onload=function(){app.init()};
-}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bdeef3b.js","/")
+}).call(this,require("rH1JPG"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_813ea61a.js","/")
 },{"./App":2,"buffer":7,"rH1JPG":9}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';

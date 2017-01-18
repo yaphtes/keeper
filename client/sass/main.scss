@@ -129,7 +129,6 @@ body {
 	display: flex;
 	flex-flow: wrap row;
 	justify-content: space-between;
-	align-items: flex-start;
 	width: 1200px;
 	box-sizing: border-box;
 	margin: 0 auto 80px;
@@ -141,6 +140,8 @@ body {
 		border-radius: 10px;
 		position: relative;
 		text-align: justify;
+		margin-bottom: 30px;
+		box-shadow: 1px 1px 1px 1px #ccc;
 		&__clear {
 			position: absolute;
 			display: block;

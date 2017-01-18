@@ -12,6 +12,7 @@ class EventListener {
 		this.listenUpdateCard();
 	}
 
+
 	listenView() {
 		document.onclick = event => {
 			let target = event.target;
@@ -24,6 +25,7 @@ class EventListener {
 		};
 	}
 
+
 	listenCardMaker() {
 		document.querySelector('.new-card').onclick = event => {
 			let target = event.target;
@@ -35,6 +37,7 @@ class EventListener {
 			}
 		};
 	}
+
 
 	deleteAllCards() {
 		document.getElementById('clearAllCards').onclick = () => {
@@ -49,6 +52,7 @@ class EventListener {
 			});
 		};
 	}
+
 
 	listenUpdateCard() {
 		let view = document.getElementById('view');
@@ -66,6 +70,7 @@ class EventListener {
 		};
 	}
 
+
 	getComponentFromDataId(dataId) {
 		let component = null;
 		app.components.cards.forEach((card) => {
@@ -74,6 +79,7 @@ class EventListener {
 
 		return component;
 	}
+
 
 	postCard() {
 		let data = {
@@ -92,6 +98,7 @@ class EventListener {
 		}, data);
 	}
 
+
 	getDataFromComponent(component, dataId = component._id) {
 		let data = {
 			title: component.title,
@@ -102,6 +109,7 @@ class EventListener {
 
 		return data;
 	}
+
 
 	updateOne(target, whatUpdate) {
 		let dataId = target.closest('.card').dataset.id;
