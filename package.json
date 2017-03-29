@@ -4,7 +4,7 @@
   "description": "Приложение для заметок. В данном приложении закрепляются полученные навыки Клиентской и Севрерной частях разработки веб-сайтов.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/app.js"
   },
   "repository": {
     "type": "git",
